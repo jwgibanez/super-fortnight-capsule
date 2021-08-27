@@ -1,6 +1,6 @@
 package io.github.jwgibanez.cartrack.data
 
-import io.github.jwgibanez.cartrack.data.model.LoggedInUser
+import io.github.jwgibanez.cartrack.data.model.Account
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -10,7 +10,7 @@ import io.github.jwgibanez.cartrack.data.model.LoggedInUser
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    var user: Account? = null
         private set
 
     val isLoggedIn: Boolean
@@ -22,12 +22,12 @@ class LoginRepository(val dataSource: LoginDataSource) {
         user = null
     }
 
-    fun logout() {
+    suspend fun logout() {
         user = null
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    suspend fun login(username: String, password: String): Result<Account> {
         // handle login
         val result = dataSource.login(username, password)
 
@@ -38,7 +38,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    private fun setLoggedInUser(loggedInUser: Account) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore

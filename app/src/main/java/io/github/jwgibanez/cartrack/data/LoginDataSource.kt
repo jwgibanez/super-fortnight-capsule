@@ -1,24 +1,31 @@
 package io.github.jwgibanez.cartrack.data
 
-import io.github.jwgibanez.cartrack.data.model.LoggedInUser
-import java.io.IOException
+import io.github.jwgibanez.cartrack.data.db.AppDatabase
+import io.github.jwgibanez.cartrack.data.model.Account
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-class LoginDataSource {
+class LoginDataSource(val appDb: AppDatabase) {
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    suspend fun login(username: String, password: String): Result<Account> =
         try {
-            // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
-            return Result.Success(fakeUser)
+            withContext(Dispatchers.IO) {
+                appDb.accountDao().find(username, password).let {
+                    if (it != null) {
+                        Result.Success(it)
+                    } else {
+                        Result.Error(Exception("No such username"))
+                    }
+                }
+            }
         } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
+            Result.Error(Exception("Error logging in", e))
         }
-    }
 
-    fun logout() {
+    suspend fun logout() {
         // TODO: revoke authentication
     }
 }
