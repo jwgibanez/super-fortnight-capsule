@@ -1,4 +1,4 @@
-package io.github.jwgibanez.cartrack.ui.login
+package io.github.jwgibanez.cartrack.view.login
 
 /**
  * Authentication result : success (user details) or error message.

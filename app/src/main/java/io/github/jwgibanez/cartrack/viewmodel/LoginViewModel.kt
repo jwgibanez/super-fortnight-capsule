@@ -1,4 +1,4 @@
-package io.github.jwgibanez.cartrack.ui.login
+package io.github.jwgibanez.cartrack.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +9,9 @@ import io.github.jwgibanez.cartrack.data.LoginRepository
 import io.github.jwgibanez.cartrack.data.Result
 
 import io.github.jwgibanez.cartrack.R
+import io.github.jwgibanez.cartrack.view.login.LoggedInUserView
+import io.github.jwgibanez.cartrack.view.login.LoginFormState
+import io.github.jwgibanez.cartrack.view.login.LoginResult
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +23,8 @@ class LoginViewModel @Inject constructor(
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+    private val _loginResult = MutableLiveData<LoginResult?>()
+    val loginResult: LiveData<LoginResult?> = _loginResult
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
@@ -45,6 +48,10 @@ class LoginViewModel @Inject constructor(
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
+    }
+
+    fun logout() {
+        _loginResult.value = null
     }
 
     // A placeholder username validation check

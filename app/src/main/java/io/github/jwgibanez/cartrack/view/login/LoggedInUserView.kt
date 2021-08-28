@@ -1,4 +1,4 @@
-package io.github.jwgibanez.cartrack.ui.login
+package io.github.jwgibanez.cartrack.view.login
 
 /**
  * User details post authentication that is exposed to the UI

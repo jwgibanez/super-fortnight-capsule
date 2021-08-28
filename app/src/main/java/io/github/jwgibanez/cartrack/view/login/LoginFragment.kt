@@ -1,38 +1,47 @@
-package io.github.jwgibanez.cartrack.ui.login
+package io.github.jwgibanez.cartrack.view.login
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.viewModels
-import dagger.hilt.android.AndroidEntryPoint
-import io.github.jwgibanez.cartrack.databinding.ActivityLoginBinding
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import io.github.jwgibanez.cartrack.databinding.FragmentLoginBinding
+import io.github.jwgibanez.cartrack.viewmodel.LoginViewModel
 
-@AndroidEntryPoint
-class LoginActivity : AppCompatActivity() {
+class LoginFragment : Fragment() {
 
-    private lateinit var binding: ActivityLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val username = binding.username
         val password = binding.password
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
+        viewModel.loginFormState.observe(viewLifecycleOwner, Observer {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
@@ -46,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
+        viewModel.loginResult.observe(viewLifecycleOwner, Observer {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
@@ -55,15 +64,13 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                val action = LoginFragmentDirections.actionLoginFragmentToListFragment()
+                findNavController().navigate(action)
             }
-            //setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            //finish()
         })
 
         username.afterTextChanged {
-            loginViewModel.loginDataChanged(
+            viewModel.loginDataChanged(
                 username.text.toString(),
                 password.text.toString()
             )
@@ -71,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
 
         password.apply {
             afterTextChanged {
-                loginViewModel.loginDataChanged(
+                viewModel.loginDataChanged(
                     username.text.toString(),
                     password.text.toString()
                 )
@@ -80,7 +87,7 @@ class LoginActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
+                        viewModel.login(
                             username.text.toString(),
                             password.text.toString()
                         )
@@ -90,22 +97,27 @@ class LoginActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                viewModel.login(username.text.toString(), password.text.toString())
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         // TODO : initiate successful logged in experience
         Toast.makeText(
-            applicationContext,
+            context,
             model.message,
             Toast.LENGTH_LONG
         ).show()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, errorString, Toast.LENGTH_SHORT).show()
     }
 }
 

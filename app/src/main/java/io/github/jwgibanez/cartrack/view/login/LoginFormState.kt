@@ -1,4 +1,4 @@
-package io.github.jwgibanez.cartrack.ui.login
+package io.github.jwgibanez.cartrack.view.login
 
 /**
  * Data validation state of the login form.
