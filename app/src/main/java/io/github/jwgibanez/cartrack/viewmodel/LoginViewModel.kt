@@ -1,5 +1,6 @@
 package io.github.jwgibanez.cartrack.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,9 @@ import io.github.jwgibanez.cartrack.data.LoginRepository
 import io.github.jwgibanez.cartrack.data.Result
 
 import io.github.jwgibanez.cartrack.R
+import io.github.jwgibanez.cartrack.data.db.AppDatabase
+import io.github.jwgibanez.cartrack.data.model.User
+import io.github.jwgibanez.cartrack.network.UserRepository
 import io.github.jwgibanez.cartrack.view.login.LoggedInUserView
 import io.github.jwgibanez.cartrack.view.login.LoginFormState
 import io.github.jwgibanez.cartrack.view.login.LoginResult
@@ -17,7 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    appDatabase: AppDatabase,
+    private val loginRepository: LoginRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
@@ -25,6 +31,8 @@ class LoginViewModel @Inject constructor(
 
     private val _loginResult = MutableLiveData<LoginResult?>()
     val loginResult: LiveData<LoginResult?> = _loginResult
+
+    val users: LiveData<List<User>> = appDatabase.userDao().all()
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
@@ -52,6 +60,17 @@ class LoginViewModel @Inject constructor(
 
     fun logout() {
         _loginResult.value = null
+    }
+
+    fun fetchUsers(activity: Activity) {
+        viewModelScope.launch {
+            userRepository.fetchUsers(
+                activity,
+                { /* started: do nothing */ },
+                { /* error: do nothing */ },
+                { /* completed: do nothing */ }
+            )
+        }
     }
 
     // A placeholder username validation check

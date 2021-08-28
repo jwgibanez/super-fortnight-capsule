@@ -1,17 +1,18 @@
 package io.github.jwgibanez.cartrack.data.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
+import io.github.jwgibanez.cartrack.data.Converters
 import io.github.jwgibanez.cartrack.data.model.Account
-import java.util.concurrent.ExecutorService
+import io.github.jwgibanez.cartrack.data.model.User
 import java.util.concurrent.Executors
 
-@Database(entities = [Account::class], version = 1)
+@Database(entities = [Account::class, User::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null

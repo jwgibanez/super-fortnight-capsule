@@ -37,5 +37,8 @@ class HomeActivity : AppCompatActivity() {
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Try to fetch users in the background
+        viewModel.fetchUsers(this)
     }
 }
