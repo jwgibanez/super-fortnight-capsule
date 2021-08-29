@@ -3,6 +3,7 @@ package io.github.jwgibanez.cartrack.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,6 +23,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
