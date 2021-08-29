@@ -6,6 +6,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="refresh">Refresh</string>
+    <string name="find_user">Find User</string>
     <string name="users">Users</string>
     <string name="details">User Details</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -16,4 +17,19 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="message_no_internet_connection">No internet connection.</string>
+    <string name="user_details_location">%1$s\'s Location</string>
+    <string name="user_details_location_default">Users\'s Location</string>
+    <string name="user_details_name">NAME: %1$s\n</string>
+    <string name="user_details_username">USERNAME: %1$s\n</string>
+    <string name="user_details_email">EMAIL: %1$s\n</string>
+    <string name="user_details_address">ADDRESS\n%1$s, %2$s, %3$s, %4$s\n</string>
+    <string name="user_details_phone">PHONE: %1$s\n</string>
+    <string name="user_details_website">WEBSITE: %1$s\n</string>
+    <string name="user_details_company">COMPANY:\n%1$s\n\"%2$s\"\n\"%3$s\"\n</string>
+    <string name="allow">Allow</string>
+    <string name="close">Close</string>
+    <string name="your_location">Your Location</string>
+    <string name="error_permission">Permission Error</string>
+    <string name="location_permission_required1">Location permission is required for this page.</string>
+    <string name="location_permission_required2">Location permission is required for this page. Enable via Settings -> App -> Cartrack -> Permissions -> Location.</string>
 </resources>

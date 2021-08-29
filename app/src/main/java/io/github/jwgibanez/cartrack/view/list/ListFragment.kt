@@ -19,7 +19,6 @@ class ListFragment : Fragment() {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: LoginViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +53,6 @@ class ListFragment : Fragment() {
         })
 
         viewModel.users.observe(viewLifecycleOwner) { facts ->
-            //binding.emptyMessage.setVisibility(if (facts.size() > 0) GONE else VISIBLE)
             adapter.submitList(facts)
         }
 
@@ -90,7 +88,7 @@ class ListFragment : Fragment() {
     }
 
     private fun onItemClick(user: User) {
-        val action = ListFragmentDirections.actionListFragmentToDetailsFragment()
+        val action = ListFragmentDirections.actionListFragmentToDetailsFragment(user)
         findNavController().navigate(action)
     }
 }

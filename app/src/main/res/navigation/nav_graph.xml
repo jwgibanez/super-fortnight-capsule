@@ -25,5 +25,9 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="io.github.jwgibanez.cartrack.view.details.DetailsFragment"
-        android:label="@string/details" />
+        android:label="@string/details">
+        <argument
+            android:name="user"
+            app:argType="io.github.jwgibanez.cartrack.data.model.User" />
+    </fragment>
 </navigation>

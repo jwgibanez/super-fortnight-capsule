@@ -21,7 +21,6 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
