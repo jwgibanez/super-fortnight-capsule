@@ -1,6 +1,7 @@
 package io.github.jwgibanez.cartrack.viewmodel
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jwgibanez.cartrack.data.LoginRepository
@@ -39,11 +40,12 @@ class LoginViewModel @Inject constructor(
     fun login(
         username: String,
         password: String,
+        country: String,
         shouldRemember: Boolean
     ) {
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
-            val result = loginRepository.login(username, password, shouldRemember)
+            val result = loginRepository.login(username, password, country, shouldRemember)
 
             if (result is Result.Success) {
                 _loginResult.value =
@@ -54,11 +56,20 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+    fun loginDataChanged(context: Context, username: String, password: String, country: String) {
+        if (!isUserNameValid(username) || !isPasswordValid(password)
+            || !isCountryValid(context, country)) {
+            val state = LoginFormState()
+            if (!isUserNameValid(username)) {
+                state.usernameError = R.string.invalid_username
+            }
+            if (!isPasswordValid(password)) {
+                state.passwordError = R.string.invalid_password
+            }
+            if (!isCountryValid(context, country)) {
+                state.countryError = R.string.invalid_country
+            }
+            _loginForm.value = state
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
@@ -93,5 +104,9 @@ class LoginViewModel @Inject constructor(
 
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    private fun isCountryValid(context: Context, country: String): Boolean {
+        return country != context.resources.getStringArray(R.array.countries_array)[0]
     }
 }

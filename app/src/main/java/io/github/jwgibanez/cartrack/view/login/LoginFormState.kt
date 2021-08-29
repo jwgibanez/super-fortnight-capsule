@@ -4,7 +4,8 @@ package io.github.jwgibanez.cartrack.view.login
  * Data validation state of the login form.
  */
 data class LoginFormState(
-    val usernameError: Int? = null,
-    val passwordError: Int? = null,
-    val isDataValid: Boolean = false
+    var usernameError: Int? = null,
+    var passwordError: Int? = null,
+    var countryError: Int? = null,
+    var isDataValid: Boolean = false
 )

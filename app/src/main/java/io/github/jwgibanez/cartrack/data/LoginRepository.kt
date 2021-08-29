@@ -16,6 +16,7 @@ class LoginRepository(private val dataSource: LoginDataSource) {
     suspend fun login(
         username: String,
         password: String,
+        country: String,
         shouldRemember: Boolean
-    ) = dataSource.login(username, password, shouldRemember)
+    ) = dataSource.login(username, password, country, shouldRemember)
 }

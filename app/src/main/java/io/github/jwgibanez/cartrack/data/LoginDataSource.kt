@@ -15,6 +15,7 @@ class LoginDataSource(val appDb: AppDatabase) {
     suspend fun login(
         username: String,
         password: String,
+        country: String,
         shouldRemember: Boolean
     ): Result<Nothing> =
         try {
@@ -23,6 +24,7 @@ class LoginDataSource(val appDb: AppDatabase) {
                     if (account != null) {
                         account.isLoggedIn = true
                         account.isRemembered = shouldRemember
+                        account.country = country
                         accountDao.forgetExcept(account.username)
                         accountDao.insertAll(account)
                         Result.Success(null)

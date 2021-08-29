@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries_array">
+        <item>Select Country</item>
+        <item>Singapore</item>
+        <item>Malaysia</item>
+        <item>Hong Kong</item>
+        <item>Taiwan</item>
+        <item>Indonesia</item>
+        <item>Philippines</item>
+        <item>Vietnam</item>
+        <item>Thailand</item>
+    </string-array>
+</resources>

@@ -42,9 +42,9 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val PREPOPULATE_DATA = listOf(
-            Account(username = "admin", password = "pass1234"),
-            Account(username = "user1", password = "pass1234"),
-            Account(username = "user2", password = "pass1234")
+            Account(username = "admin", password = "pass1234", "Singapore"),
+            Account(username = "user1", password = "pass1234", "Singapore"),
+            Account(username = "user2", password = "pass1234", "Singapore")
         )
     }
 }
