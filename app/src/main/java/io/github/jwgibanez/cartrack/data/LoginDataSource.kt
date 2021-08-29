@@ -10,12 +10,22 @@ import kotlinx.coroutines.withContext
  */
 class LoginDataSource(val appDb: AppDatabase) {
 
-    suspend fun login(username: String, password: String): Result<Account> =
+    private val accountDao = appDb.accountDao()
+
+    suspend fun login(
+        username: String,
+        password: String,
+        shouldRemember: Boolean
+    ): Result<Nothing> =
         try {
             withContext(Dispatchers.IO) {
-                appDb.accountDao().find(username, password).let {
-                    if (it != null) {
-                        Result.Success(it)
+                accountDao.find(username, password).let { account ->
+                    if (account != null) {
+                        account.isLoggedIn = true
+                        account.isRemembered = shouldRemember
+                        accountDao.forgetExcept(account.username)
+                        accountDao.insertAll(account)
+                        Result.Success(null)
                     } else {
                         Result.Error(Exception("No such username"))
                     }
@@ -25,7 +35,10 @@ class LoginDataSource(val appDb: AppDatabase) {
             Result.Error(Exception("Error logging in", e))
         }
 
-    suspend fun logout() {
-        // TODO: revoke authentication
+    suspend fun logout(account: Account) {
+        withContext(Dispatchers.IO) {
+            account.isLoggedIn = false
+            accountDao.insertAll(account)
+        }
     }
 }

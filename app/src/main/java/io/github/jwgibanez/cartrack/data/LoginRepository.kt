@@ -1,46 +1,21 @@
 package io.github.jwgibanez.cartrack.data
 
+import androidx.lifecycle.LiveData
 import io.github.jwgibanez.cartrack.data.model.Account
 
-/**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
- */
+class LoginRepository(private val dataSource: LoginDataSource) {
 
-class LoginRepository(val dataSource: LoginDataSource) {
-
-    // in-memory cache of the loggedInUser object
-    var user: Account? = null
-        private set
+    var account: LiveData<Account?> = dataSource.appDb.accountDao().loggedInUser()
+    var rememberedAccount: LiveData<Account?> = dataSource.appDb.accountDao().rememberedUser()
 
     val isLoggedIn: Boolean
-        get() = user != null
+        get() = account.value != null
 
-    init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
-    }
+    suspend fun logout() = account.value?.let { dataSource.logout(it) }
 
-    suspend fun logout() {
-        user = null
-        dataSource.logout()
-    }
-
-    suspend fun login(username: String, password: String): Result<Account> {
-        // handle login
-        val result = dataSource.login(username, password)
-
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-        }
-
-        return result
-    }
-
-    private fun setLoggedInUser(loggedInUser: Account) {
-        this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-    }
+    suspend fun login(
+        username: String,
+        password: String,
+        shouldRemember: Boolean
+    ) = dataSource.login(username, password, shouldRemember)
 }

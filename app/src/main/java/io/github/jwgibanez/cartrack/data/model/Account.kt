@@ -7,4 +7,6 @@ import androidx.room.PrimaryKey
 data class Account(
     @PrimaryKey val username: String,
     val password: String,
+    var isLoggedIn: Boolean = false,
+    var isRemembered: Boolean = false
 )

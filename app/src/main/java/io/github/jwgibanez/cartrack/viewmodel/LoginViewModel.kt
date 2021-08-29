@@ -32,12 +32,19 @@ class LoginViewModel @Inject constructor(
     private val _loginResult = MutableLiveData<LoginResult?>()
     val loginResult: LiveData<LoginResult?> = _loginResult
 
+    val loggedInAccount get() = loginRepository.account
+    val rememberedAccount get() = loginRepository.rememberedAccount
+
     val users: LiveData<List<User>> = appDatabase.userDao().all()
 
-    fun login(username: String, password: String) {
+    fun login(
+        username: String,
+        password: String,
+        shouldRemember: Boolean
+    ) {
         viewModelScope.launch {
             // can be launched in a separate asynchronous job
-            val result = loginRepository.login(username, password)
+            val result = loginRepository.login(username, password, shouldRemember)
 
             if (result is Result.Success) {
                 _loginResult.value =
@@ -60,6 +67,9 @@ class LoginViewModel @Inject constructor(
 
     fun logout() {
         _loginResult.value = null
+        viewModelScope.launch {
+            loginRepository.logout()
+        }
     }
 
     fun fetchUsers(activity: Activity) {
@@ -73,12 +83,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }

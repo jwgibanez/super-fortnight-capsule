@@ -38,6 +38,7 @@ class LoginFragment : Fragment() {
 
         val username = binding.username
         val password = binding.password
+        val shouldRemember = binding.rememberLogin
         val login = binding.login
         val loading = binding.loading
 
@@ -64,10 +65,23 @@ class LoginFragment : Fragment() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
-                val action = LoginFragmentDirections.actionLoginFragmentToListFragment()
+                val action = LoginFragmentDirections
+                    .actionLoginFragmentToListFragment(binding.username.text.toString())
                 findNavController().navigate(action)
             }
         })
+
+        viewModel.rememberedAccount.observe(viewLifecycleOwner) {
+            if (it != null) {
+                isValidationPaused = true
+                binding.username.setText(it.username)
+                binding.password.setText(it.password)
+                if (binding.rememberLogin?.isChecked == false)
+                    binding.rememberLogin?.isChecked = true
+                binding.login.isEnabled = true
+                isValidationPaused = false
+            }
+        }
 
         username.afterTextChanged {
             viewModel.loginDataChanged(
@@ -89,7 +103,8 @@ class LoginFragment : Fragment() {
                     EditorInfo.IME_ACTION_DONE ->
                         viewModel.login(
                             username.text.toString(),
-                            password.text.toString()
+                            password.text.toString(),
+                            shouldRemember?.isChecked ?: false
                         )
                 }
                 false
@@ -97,7 +112,11 @@ class LoginFragment : Fragment() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                viewModel.login(username.text.toString(), password.text.toString())
+                viewModel.login(
+                    username.text.toString(),
+                    password.text.toString(),
+                    shouldRemember?.isChecked ?: false
+                )
             }
         }
     }
@@ -108,12 +127,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
+        /*Toast.makeText(
             context,
             model.message,
-            Toast.LENGTH_LONG
-        ).show()
+            Toast.LENGTH_SHORT
+        ).show()*/
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
@@ -124,10 +142,12 @@ class LoginFragment : Fragment() {
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
+var isValidationPaused = false
+
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
+            if (!isValidationPaused) afterTextChanged.invoke(editable.toString())
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

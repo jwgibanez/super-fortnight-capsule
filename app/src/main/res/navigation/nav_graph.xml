@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="io.github.jwgibanez.cartrack.view.login.LoginFragment"
-        android:label="@string/login">
+        android:label="@string/title_login">
         <action
             android:id="@+id/action_loginFragment_to_listFragment"
             app:destination="@+id/listFragment"/>
@@ -14,7 +14,10 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="io.github.jwgibanez.cartrack.view.list.ListFragment"
-        android:label="@string/users">
+        android:label="Welcome, {username}!">
+        <argument
+            android:name="username"
+            app:argType="string" />
         <action
             android:id="@+id/action_listFragment_to_detailsFragment"
             app:destination="@+id/detailsFragment"/>
