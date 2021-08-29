@@ -10,7 +10,10 @@ interface AccountDao {
     fun all(): LiveData<List<Account>>
 
     @Query("SELECT * FROM account WHERE isLoggedIn = 1")
-    fun loggedInUser(): LiveData<Account?>
+    fun loggedInAccount(): LiveData<Account?>
+
+    @Query("SELECT * FROM account WHERE isLoggedIn = 1")
+    fun loggedInAccount2(): Account?
 
     @Query("SELECT * FROM account WHERE isRemembered = 1")
     fun rememberedUser(): LiveData<Account?>

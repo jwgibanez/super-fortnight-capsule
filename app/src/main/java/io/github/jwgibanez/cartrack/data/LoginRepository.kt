@@ -5,7 +5,7 @@ import io.github.jwgibanez.cartrack.data.model.Account
 
 class LoginRepository(private val dataSource: LoginDataSource) {
 
-    var account: LiveData<Account?> = dataSource.appDb.accountDao().loggedInUser()
+    var account: LiveData<Account?> = dataSource.appDb.accountDao().loggedInAccount()
     var rememberedAccount: LiveData<Account?> = dataSource.appDb.accountDao().rememberedUser()
 
     val isLoggedIn: Boolean

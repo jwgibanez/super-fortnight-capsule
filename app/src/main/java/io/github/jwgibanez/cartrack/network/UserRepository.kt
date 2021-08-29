@@ -11,17 +11,17 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UserRepository(private val userService: UserService) {
+class UserRepository(private val userService: UserService): IUserRepository {
 
-    suspend fun fetchUsers(
-        activity: Activity,
+    override suspend fun fetchUsers(
+        activity: Activity?,
         started: () -> Unit,
         error: (Exception) -> Unit,
         completed: () -> Unit
     ) {
         withContext(Dispatchers.IO) {
             isNetworkConnected(
-                activity,
+                activity!!,
                 {
                     userService.getUsers().safeSubscribe(object : Observer<List<User>> {
                         override fun onSubscribe(d: Disposable) {
@@ -49,19 +49,17 @@ class UserRepository(private val userService: UserService) {
         }
     }
 
-    companion object {
-        private fun isNetworkConnected(
-            activity: Activity,
-            connected : () -> Unit,
-            error: (e: String) -> Unit
-        ) {
-            val cm =
-                activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected) {
-                connected()
-            } else {
-                error(activity.getString(R.string.message_no_internet_connection))
-            }
+    override fun isNetworkConnected(
+        activity: Activity,
+        connected : () -> Unit,
+        error: (e: String) -> Unit
+    ) {
+        val cm =
+            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected) {
+            connected()
+        } else {
+            error(activity.getString(R.string.message_no_internet_connection))
         }
     }
 }
