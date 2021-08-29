@@ -30,6 +30,7 @@
     <string name="close">Close</string>
     <string name="your_location">Your Location</string>
     <string name="error_permission">Permission Error</string>
+    <string name="empty_list">No users founds. Click refresh.</string>
     <string name="location_permission_required1">Location permission is required for this page.</string>
     <string name="location_permission_required2">Location permission is required for this page. Enable via Settings -> App -> Cartrack -> Permissions -> Location.</string>
 </resources>

@@ -43,9 +43,6 @@ class HomeActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        // Try to fetch users in the background
-        viewModel.fetchUsers(this)
-
         // If an account has previously logged-in, skip login form
         viewModel.loggedInAccount.observe(this) {
             if (it?.isLoggedIn == true

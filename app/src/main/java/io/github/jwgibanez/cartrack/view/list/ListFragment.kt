@@ -7,6 +7,9 @@ import androidx.fragment.app.activityViewModels
 import io.github.jwgibanez.cartrack.viewmodel.LoginViewModel
 
 import android.view.MenuInflater
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.jwgibanez.cartrack.R
 import io.github.jwgibanez.cartrack.data.model.User
 import io.github.jwgibanez.cartrack.databinding.FragmentListBinding
+import java.lang.Exception
 
 class ListFragment : Fragment() {
 
@@ -38,6 +42,8 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fetchUsers()
+
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         val adapter = ListAdapter({ user -> onItemClick(user) }, ListAdapter.Diff())
@@ -52,8 +58,15 @@ class ListFragment : Fragment() {
             }
         })
 
-        viewModel.users.observe(viewLifecycleOwner) { facts ->
-            adapter.submitList(facts)
+        viewModel.users.observe(viewLifecycleOwner) { users ->
+            if (users.isNotEmpty()) {
+                adapter.submitList(users)
+                binding.itemList.visibility = VISIBLE
+                binding.emptyListMessage.visibility = GONE
+            } else {
+                binding.itemList.visibility = GONE
+                binding.emptyListMessage.visibility = VISIBLE
+            }
         }
 
         binding.itemList.adapter = adapter
@@ -75,11 +88,19 @@ class ListFragment : Fragment() {
                 true
             }
             R.id.action_refresh -> {
-                viewModel.fetchUsers(requireActivity())
+                fetchUsers()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun fetchUsers() {
+        viewModel.fetchUsers(
+            requireActivity(),
+            { binding.loading.visibility = VISIBLE },
+            { onFetchError(it) },
+            { binding.loading.visibility = GONE })
     }
 
     override fun onDestroyView() {
@@ -90,5 +111,11 @@ class ListFragment : Fragment() {
     private fun onItemClick(user: User) {
         val action = ListFragmentDirections.actionListFragmentToDetailsFragment(user)
         findNavController().navigate(action)
+    }
+
+    private fun onFetchError(exception: Exception?) {
+        exception?.let {
+            Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+        }
     }
 }

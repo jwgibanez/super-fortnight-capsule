@@ -1,10 +1,7 @@
 package io.github.jwgibanez.cartrack.viewmodel
 
 import android.app.Activity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jwgibanez.cartrack.data.LoginRepository
 import io.github.jwgibanez.cartrack.data.Result
@@ -16,7 +13,9 @@ import io.github.jwgibanez.cartrack.network.UserRepository
 import io.github.jwgibanez.cartrack.view.login.LoggedInUserView
 import io.github.jwgibanez.cartrack.view.login.LoginFormState
 import io.github.jwgibanez.cartrack.view.login.LoginResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -72,13 +71,18 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun fetchUsers(activity: Activity) {
+    fun fetchUsers(
+        activity: Activity,
+        started: () -> Unit,
+        error: (Exception?) -> Unit,
+        completed: () -> Unit
+    ) {
         viewModelScope.launch {
             userRepository.fetchUsers(
                 activity,
-                { /* started: do nothing */ },
-                { /* error: do nothing */ },
-                { /* completed: do nothing */ }
+                { viewModelScope.launch(Dispatchers.Main) { started() } },
+                { viewModelScope.launch(Dispatchers.Main) { error(it) } },
+                { viewModelScope.launch(Dispatchers.Main) { completed() } }
             )
         }
     }
