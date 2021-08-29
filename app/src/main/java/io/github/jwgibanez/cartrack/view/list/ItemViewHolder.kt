@@ -1,7 +1,6 @@
 package io.github.jwgibanez.cartrack.view.list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.github.jwgibanez.cartrack.data.model.User
@@ -14,7 +13,6 @@ class ItemViewHolder private constructor(
 
     fun bind(user: User) {
         binding.name.text = user.name
-        //loadImage(user.avatar, binding.imageView, binding.progressBar)
         itemView.setOnClickListener { onItemClick(user) }
     }
 

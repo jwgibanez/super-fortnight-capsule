@@ -5,7 +5,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import io.github.jwgibanez.cartrack.viewmodel.LoginViewModel
-
 import android.view.MenuInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE

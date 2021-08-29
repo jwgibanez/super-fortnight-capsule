@@ -1,11 +1,9 @@
 package io.github.jwgibanez.cartrack.view.list
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import io.github.jwgibanez.cartrack.data.model.User
-import io.github.jwgibanez.cartrack.databinding.ListItemBinding
 
 class ListAdapter(
     private val click: (User) -> Unit,
@@ -13,8 +11,6 @@ class ListAdapter(
 ) : ListAdapter<User, ItemViewHolder?>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemBinding.inflate(inflater, parent, false)
         return ItemViewHolder.create(parent, click)
     }
 

@@ -20,9 +20,6 @@ import io.github.jwgibanez.cartrack.databinding.FragmentLoginBinding
 import io.github.jwgibanez.cartrack.viewmodel.LoginViewModel
 import android.widget.AdapterView
 
-
-
-
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
@@ -73,7 +70,6 @@ class LoginFragment : Fragment() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
                 val action = LoginFragmentDirections
                     .actionLoginFragmentToListFragment(binding.username.text.toString())
                 findNavController().navigate(action)
@@ -174,14 +170,6 @@ class LoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        /*Toast.makeText(
-            context,
-            model.message,
-            Toast.LENGTH_SHORT
-        ).show()*/
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
