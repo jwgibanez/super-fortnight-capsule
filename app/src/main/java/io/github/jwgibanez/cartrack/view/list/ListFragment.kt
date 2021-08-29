@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,7 +84,14 @@ class ListFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 viewModel.logout()
-                findNavController().popBackStack()
+                // Navigate to a fresh login fragment
+                findNavController().navigate(
+                    R.id.loginFragment,
+                    arguments,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.loginFragment, true)
+                        .build()
+                )
                 true
             }
             R.id.action_refresh -> {
