@@ -10,7 +10,7 @@ import io.github.jwgibanez.cartrack.data.Result
 import io.github.jwgibanez.cartrack.R
 import io.github.jwgibanez.cartrack.data.db.AppDatabase
 import io.github.jwgibanez.cartrack.data.model.User
-import io.github.jwgibanez.cartrack.network.UserRepository
+import io.github.jwgibanez.cartrack.network.IUserRepository
 import io.github.jwgibanez.cartrack.view.login.LoggedInUserView
 import io.github.jwgibanez.cartrack.view.login.LoginFormState
 import io.github.jwgibanez.cartrack.view.login.LoginResult
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     appDatabase: AppDatabase,
     private val loginRepository: LoginRepository,
-    private val userRepository: UserRepository
+    private val userRepository: IUserRepository
 ) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()

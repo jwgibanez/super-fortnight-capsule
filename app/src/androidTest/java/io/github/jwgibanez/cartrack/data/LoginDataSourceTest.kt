@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.jwgibanez.cartrack.data.db.AccountDao
 import io.github.jwgibanez.cartrack.data.db.AppDatabase
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +22,7 @@ class LoginDataSourceTest {
     private lateinit var dataSource: LoginDataSource
 
     @Before
-    fun createDb() {
+    fun before() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, AppDatabase::class.java).build()
@@ -35,7 +35,7 @@ class LoginDataSourceTest {
 
     @After
     @Throws(IOException::class)
-    fun closeDb() {
+    fun after() {
         db.close()
     }
 
@@ -51,7 +51,7 @@ class LoginDataSourceTest {
                 shouldRemember = false
             )
         }
-        MatcherAssert.assertThat("Login is success", result is Result.Success)
+        assertThat("Login is success", result is Result.Success)
     }
 
     @Test
@@ -66,7 +66,7 @@ class LoginDataSourceTest {
                 shouldRemember = false
             )
         }
-        MatcherAssert.assertThat("Login is failing", result is Result.Error)
+        assertThat("Login is failing", result is Result.Error)
     }
 
     @Test
@@ -81,7 +81,7 @@ class LoginDataSourceTest {
                 shouldRemember = false
             )
         }
-        MatcherAssert.assertThat("Login is failing", result is Result.Error)
+        assertThat("Login is failing", result is Result.Error)
     }
 
     @Test
@@ -96,14 +96,14 @@ class LoginDataSourceTest {
                 shouldRemember = false
             )
         }
-        MatcherAssert.assertThat("Login is success 1", result is Result.Success)
+        assertThat("Login is success 1", result is Result.Success)
         var loggedIn = accountDao.loggedInAccount2()
-        MatcherAssert.assertThat("Login is success 2", loggedIn!!.isLoggedIn)
+        assertThat("Login is success 2", loggedIn!!.isLoggedIn)
         runBlocking {
             dataSource.logout(loggedIn!!)
         }
         loggedIn = accountDao.find(loggedIn.username)
-        MatcherAssert.assertThat("Logout is success 1", !loggedIn!!.isLoggedIn)
+        assertThat("Logout is success 1", !loggedIn!!.isLoggedIn)
     }
 
 }

@@ -1,6 +1,7 @@
 package io.github.jwgibanez.cartrack.network
+
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -28,9 +29,9 @@ class UserRepositoryTest {
                 completed = true
             })
         }
-        MatcherAssert.assertThat("Has started", started)
-        MatcherAssert.assertThat("Has completed", completed)
-        MatcherAssert.assertThat("Has no error", !hasError)
+        assertThat("Has started", started)
+        assertThat("Has completed", completed)
+        assertThat("Has no error", !hasError)
     }
 
 }

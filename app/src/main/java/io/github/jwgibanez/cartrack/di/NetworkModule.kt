@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ViewModelComponent
+import io.github.jwgibanez.cartrack.network.IUserRepository
 import io.github.jwgibanez.cartrack.network.UserRepository
 import io.github.jwgibanez.cartrack.network.UserService
 import okhttp3.OkHttpClient
@@ -47,7 +48,7 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideUserRepository(userService: UserService): UserRepository {
+    fun provideUserRepository(userService: UserService): IUserRepository {
         return UserRepository(userService)
     }
 }

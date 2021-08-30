@@ -10,14 +10,13 @@ import io.github.jwgibanez.cartrack.data.db.AccountDao
 import io.github.jwgibanez.cartrack.data.db.AppDatabase
 import io.github.jwgibanez.cartrack.data.model.Account
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 import org.junit.Rule
-
 
 @RunWith(AndroidJUnit4::class)
 class LoginRepositoryTest {
@@ -31,7 +30,7 @@ class LoginRepositoryTest {
     private lateinit var repository: LoginRepository
 
     @Before
-    fun createDb() {
+    fun before() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, AppDatabase::class.java).build()
@@ -45,7 +44,7 @@ class LoginRepositoryTest {
 
     @After
     @Throws(IOException::class)
-    fun closeDb() {
+    fun after() {
         db.close()
     }
 
@@ -67,9 +66,9 @@ class LoginRepositoryTest {
                     shouldRemember = false
                 )
             }
-            MatcherAssert.assertThat("Login is success", result is Result.Success)
-            MatcherAssert.assertThat("Observer worked", loggedIn?.username == "admin")
-            MatcherAssert.assertThat("Internal flag works", repository.isLoggedIn)
+            assertThat("Login is success", result is Result.Success)
+            assertThat("Observer worked", loggedIn?.username == "admin")
+            assertThat("Internal flag works", repository.isLoggedIn)
         } finally {
             repository.account.removeObserver(observer)
         }
@@ -93,14 +92,14 @@ class LoginRepositoryTest {
                     shouldRemember = false
                 )
             }
-            MatcherAssert.assertThat("Login is success", result is Result.Success)
-            MatcherAssert.assertThat("Observer login worked", loggedIn?.username == "admin")
-            MatcherAssert.assertThat("Internal flag works", repository.isLoggedIn)
+            assertThat("Login is success", result is Result.Success)
+            assertThat("Observer login worked", loggedIn?.username == "admin")
+            assertThat("Internal flag works", repository.isLoggedIn)
             runBlocking {
                 repository.logout()
             }
-            MatcherAssert.assertThat("Observer logout worked", loggedIn == null)
-            MatcherAssert.assertThat("Internal flag works", !repository.isLoggedIn)
+            assertThat("Observer logout worked", loggedIn == null)
+            assertThat("Internal flag works", !repository.isLoggedIn)
         } finally {
             repository.account.removeObserver(observer)
         }
